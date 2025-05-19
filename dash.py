@@ -357,6 +357,16 @@ if st.session_state.page == 'page1':
         (data_with_ton['Партнер'].isin(partner))
     ]
 
+    data_with_ton1 = pd.merge(data_with_tags, tonal, on='id Отзыва')
+
+    filtered_data_tag_ton1 = data_with_ton1[
+        (data_with_ton1['Дата'] >= start) &
+        (data_with_ton1['Дата'] <= end) &
+        (data_with_ton1['Регион'].isin(region)) &
+        (data_with_ton1['АЗС'].isin(azs)) &
+        (data_with_ton1['Партнер'].isin(partner))
+        ]
+
     # Группируем по тональности
     sentiment_counts = filtered_data_tag_ton['Тональность'].value_counts().reset_index()
     sentiment_counts.columns = ['Тональность', 'Количество']
@@ -537,9 +547,9 @@ if st.session_state.page == 'page1':
         st.plotly_chart(fig, use_container_width=True)
 
     # Строим диаграмму
-    if not filtered_data_tag_ton.empty:
+    if not filtered_data_tag_ton1.empty:
         # Группируем данные по категориям и тональностям
-        grouped_data = filtered_data_tag_ton.groupby(['Категория', 'Тональность']).size().reset_index(name='Количество')
+        grouped_data = filtered_data_tag_ton1.groupby(['Категория', 'Тональность']).size().reset_index(name='Количество')
         tonality_order = ['позитивная', 'негативная', 'нейтральная', 'смешанная']
         color_map = {
             'позитивная': '#73af48',
