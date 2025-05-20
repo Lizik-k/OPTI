@@ -72,7 +72,8 @@ tags_category = pd.read_excel('Комментарии_теги.xlsx')
 tag_list =  list(pd.DataFrame(tags_category)['Тег'].drop_duplicates())
 
 # Теги
-tonal = pd.read_excel('Комментарии_тональность.xlsx')
+tonal = pd.read_excel('Комментарии_тональность.xlsx').drop_duplicates()
+
 
 
 # ====================== НАВИГАЦИОННОЕ МЕНЮ ======================
