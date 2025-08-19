@@ -6,6 +6,10 @@ from datetime import date, datetime
 
 
 # ====================== НАСТРОЙКА СТРАНИЦ ======================
+st.set_page_config(
+
+    layout="wide",  # Установка широкой рабочей области
+)
 if 'page' not in st.session_state:
     st.session_state.page = 'page1'  # По умолчанию первая страница
 
@@ -52,8 +56,10 @@ region = spisok_azs['Регион'].drop_duplicates()
 
 #Выгрузка отзывов
 data = pd.read_excel('DataFrame.xlsx')
+#data['Дата'] = pd.to_datetime(data['Дата'], format='%Y-%m-%d', errors='coerce')
 max_date = max(list(data['Дата']))
 min_date = min(list(data['Дата']))
+
 start_date = min_date.split('-')
 start_day = int(start_date[2])
 start_month = int(start_date[1])
@@ -62,7 +68,7 @@ end_date = max_date.split('-')
 end_day = int(end_date[2])
 end_month = int(end_date[1])
 end_year = int(end_date[0])
-data['Дата'] = pd.to_datetime(data['Дата']).dt.date
+
 data['АЗС'] = pd.to_numeric(data['АЗС'])
 data['Рейтинг'] = pd.to_numeric(data['Рейтинг'])
 
@@ -157,9 +163,7 @@ if st.session_state.page == 'page1':
         default=available_azs
     )
 
-
-
-
+    data['Дата'] = pd.to_datetime(data['Дата']).dt.date
     filtered_data = data[
         (data['Дата'] >= start) &
         (data['Дата'] <= end) &
@@ -329,17 +333,17 @@ if st.session_state.page == 'page1':
             #         st.write(f"- {comment}")
 
         # Дополнительная таблица с данными
-        st.write("### Статистика по тегам")
-        tag_counts['Доля'] = (tag_counts['Количество'] / tag_counts['Количество'].sum() * 100).round(1)
-        st.dataframe(
-            tag_counts.sort_values('Количество', ascending=False),
-            column_config={
-                "Тег": "Категория",
-                "Количество": st.column_config.NumberColumn(format="%d"),
-                "Доля": st.column_config.NumberColumn(format="%.1f%%")
-            },
-            hide_index=True
-        )
+        # st.write("### Статистика по тегам")
+        # tag_counts['Доля'] = (tag_counts['Количество'] / tag_counts['Количество'].sum() * 100).round(1)
+        # st.dataframe(
+        #     tag_counts.sort_values('Количество', ascending=False),
+        #     column_config={
+        #         "Тег": "Категория",
+        #         "Количество": st.column_config.NumberColumn(format="%d"),
+        #         "Доля": st.column_config.NumberColumn(format="%.1f%%")
+        #     },
+        #     hide_index=True
+        # )
 
     else:
         st.warning("Нет данных по выбранным фильтрам")
@@ -892,6 +896,7 @@ elif st.session_state.page == 'page2':
 
     data_with_tags = pd.merge(data, tags_category, on='id Отзыва')
 
+    data_with_tags['Дата'] = pd.to_datetime(data_with_tags['Дата']).dt.date
     filtered_data = data_with_tags[
         (data_with_tags['Дата'] >= start) &
         (data_with_tags['Дата'] <= end) &
@@ -925,6 +930,7 @@ elif st.session_state.page == 'page2':
     )
     data_with_tags = pd.merge(data, tags_category, on='id Отзыва')
 
+    data['Дата'] = pd.to_datetime(data['Дата']).dt.date
     filtered_data = data[
         (data['Дата'] >= start) &
         (data['Дата'] <= end)
@@ -1065,7 +1071,7 @@ if st.session_state.page == 'page3':
 
     azs = st.sidebar.multiselect('Номер АЗС', (number_azs), number_azs)
 
-
+    data['Дата'] = pd.to_datetime(data['Дата']).dt.date
     filtered_data = data[
             (data['Дата'] >= start) &
             (data['Дата'] <= end) &
